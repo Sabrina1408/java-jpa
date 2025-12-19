@@ -43,4 +43,8 @@ public class Exercicios {
       return false;
     }
   }
+
+  public static List<String> converterEmails(List<String> emails) {
+    return emails.stream().map(String::toLowerCase).collect(Collectors.toList());
+  }
 }

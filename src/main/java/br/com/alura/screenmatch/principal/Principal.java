@@ -3,15 +3,19 @@ package br.com.alura.screenmatch.principal;
 import static br.com.alura.screenmatch.exercicios.Exercicios.ehPalindromo;
 import static br.com.alura.screenmatch.exercicios.Exercicios.obterPrimeiroEUltimoNome;
 import static br.com.alura.screenmatch.exercicios.Exercicios.processaNumero;
+import static br.com.alura.screenmatch.exercicios.Exercicios.converterEmails;
+
 
 import br.com.alura.screenmatch.exercicios.Exercicios;
 import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
+import br.com.alura.screenmatch.model.Mes;
 import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -117,5 +121,11 @@ public class Principal {
       System.out.println(ehPalindromo("socorram me subi no onibus em marrocos")); // Saída: true
       System.out.println(ehPalindromo("Java"));
       System.out.println(ehPalindromo("ana ana"));
+
+      List<String> emails = Arrays.asList("TESTE@EXEMPLO.COM", "exemplo@Java.com ", "Usuario@teste.Com");
+      System.out.println(converterEmails(emails));
+
+      System.out.println(Mes.FEVEREIRO.getNumeroDeDias()); // 28
+      System.out.println(Mes.JULHO.getNumeroDeDias()); // 31
     }
 }
