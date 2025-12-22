@@ -33,6 +33,9 @@ public class Serie {
   @Transient // Ignorar essa propriedade no banco de dados
   private List<Episodio> episodios = new ArrayList<>();
 
+  public Serie() {
+  }
+
   public Serie(DadosSerie dados) {
     this.titulo = dados.titulo();
     this.totalTemporadas = dados.totalTemporadas();

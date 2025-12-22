@@ -88,12 +88,13 @@ public class Principal {
     }
 
     private void buscarSeriesPesquisadas() {
-      List<Serie> series = dadosSeries.stream()
-              .map(Serie::new)
-              .collect(Collectors.toList());
+//      List<Serie> series = dadosSeries.stream()
+//              .map(Serie::new)
+//              .collect(Collectors.toList());
+      List<Serie> series = repositorio.findAll();
 
       series.stream()
-              .sorted(Comparator.comparing(Serie::getGenero))
+              .sorted(Comparator.comparing(Serie::getTitulo))
                   .forEach(System.out::println);
     }
 
