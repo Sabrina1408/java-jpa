@@ -2,16 +2,36 @@ package br.com.alura.screenmatch.model;
 
 import br.com.alura.screenmatch.service.traducao.ConsultaMyMemory;
 import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
+@Entity
+@Table(name = "series")
 public class Serie {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  @Column(unique=true)
   private String titulo;
   private Integer totalTemporadas;
   private Double avaliacao;
+  @Enumerated(EnumType.STRING)
   private Categoria genero;
   private String atoresStr;
   private String poster;
   private String sinopse;
+  @Transient // Ignorar essa propriedade no banco de dados
+  private List<Episodio> episodios = new ArrayList<>();
 
   public Serie(DadosSerie dados) {
     this.titulo = dados.titulo();
@@ -21,6 +41,14 @@ public class Serie {
     this.atoresStr = dados.atoresStr();
     this.poster = dados.poster();
     this.sinopse = ConsultaMyMemory.obterTraducao(dados.sinopse()).trim();
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public String getTitulo() {
@@ -77,6 +105,14 @@ public class Serie {
 
   public void setSinopse(String sinopse) {
     this.sinopse = sinopse;
+  }
+
+  public List<Episodio> getEpisodios() {
+    return episodios;
+  }
+
+  public void setEpisodios(List<Episodio> episodios) {
+    this.episodios = episodios;
   }
 
   @Override
