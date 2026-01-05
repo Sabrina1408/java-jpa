@@ -1,8 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
-import static br.com.alura.screenmatch.exercicios.Exercicios.ehPalindromo;
 import static br.com.alura.screenmatch.exercicios.Exercicios.obterPrimeiroEUltimoNome;
-import static br.com.alura.screenmatch.exercicios.Exercicios.processaNumero;
 import static br.com.alura.screenmatch.exercicios.Exercicios.converterEmails;
 
 
@@ -21,8 +19,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class Principal {
 
@@ -120,18 +116,10 @@ public class Principal {
 
     private void exercicios() {
       Exercicios teste = new Exercicios();
-      teste.processaDados();
-
-      processaNumero(Optional.of(5)); // Saída: Optional[25]
-      processaNumero(Optional.of(-3)); // Saída: Optional.empty
-      processaNumero(Optional.empty());
+      teste.executar();
 
       System.out.println(obterPrimeiroEUltimoNome("  João Carlos Silva   ")); // Saída: "João Silva"
       System.out.println(obterPrimeiroEUltimoNome("Maria   "));
-
-      System.out.println(ehPalindromo("socorram me subi no onibus em marrocos")); // Saída: true
-      System.out.println(ehPalindromo("Java"));
-      System.out.println(ehPalindromo("ana ana"));
 
       List<String> emails = Arrays.asList("TESTE@EXEMPLO.COM", "exemplo@Java.com ", "Usuario@teste.Com");
       System.out.println(converterEmails(emails));

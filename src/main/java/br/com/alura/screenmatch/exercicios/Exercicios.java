@@ -1,47 +1,49 @@
 package br.com.alura.screenmatch.exercicios;
 
+import br.com.alura.screenmatch.exercicios.modelos.CalculadoraOpcional;
+import br.com.alura.screenmatch.exercicios.modelos.VerificadorDePalindromo;
+import br.com.alura.screenmatch.exercicios.modelos.ProcessadorDeEntradas;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Exercicios {
-  List<String> input = Arrays.asList("10", "abc", "20", "30x");
+  List<String> entradasExemplo = Arrays.asList("10", "abc", "20", "30x");
 
-  public void processaDados() {
-    List<Integer> resultado = input.stream()
-        .map(s -> {
-          try {
-            return Integer.parseInt(s);
-          } catch (NumberFormatException e) {
-            return null;
-          }
-        })
-        .filter(i -> i != null)
-        .collect(Collectors.toList());
-    System.out.println(resultado);
-  }
+//  public void extrairEntradasValidas() {
+//    List<Integer> entradasValidas = entradasExemplo.stream()
+//        .map(elemento -> {
+//          try {
+//            return Integer.parseInt(elemento);
+//          } catch (NumberFormatException error) {
+//            return null;
+//          }
+//        })
+//        .filter(numero -> numero != null)
+//        .collect(Collectors.toList());
+//    System.out.println(entradasValidas);
+//  }
 
-  public static Optional<Integer> processaNumero(Optional<Integer> numero) {
-    numero.ifPresentOrElse(
-        n -> System.out.println("Número presente: " + n*n),
-        () -> System.out.println("Número ausente")
-    );
-    return numero.map(n -> n * n);
+  // Já fazendo o uso do Clean Code
+
+  public void executar() {
+    ProcessadorDeEntradas processador = new ProcessadorDeEntradas();
+    processador.exibirEntradasValidas(entradasExemplo);
+
+    CalculadoraOpcional calculadoraOpcional = new CalculadoraOpcional();
+    calculadoraOpcional.executarLogicaDeNegocio(Optional.of(5));
+    calculadoraOpcional.executarLogicaDeNegocio(Optional.of(-3));
+    calculadoraOpcional.executarLogicaDeNegocio(Optional.empty());
+
+    VerificadorDePalindromo palindromo = new VerificadorDePalindromo();
+    palindromo.verificar("socorram me subi no onibus em marrocos");
+    palindromo.verificar("Java");
+    palindromo.verificar("ana ana");
   }
 
   public static String obterPrimeiroEUltimoNome(String nomeCompleto) {
     return nomeCompleto.trim();
-  }
-
-  public static boolean ehPalindromo(String palavra) {
-    String limpo = palavra.replace(" ", "").toLowerCase();
-    String palindromo = new StringBuilder(limpo).reverse().toString();
-    if (limpo.equals(palindromo)) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   public static List<String> converterEmails(List<String> emails) {
