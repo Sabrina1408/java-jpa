@@ -5,7 +5,7 @@ import static br.com.alura.screenmatch.exercicios.Exercicios.converterEmails;
 
 
 import br.com.alura.screenmatch.exercicios.Exercicios;
-import br.com.alura.screenmatch.model.DadosSerie;
+import br.com.alura.screenmatch.model.SerieEntity;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Mes;
 import br.com.alura.screenmatch.model.Serie;
@@ -15,24 +15,22 @@ import br.com.alura.screenmatch.service.ConverteDados;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
 
-    private Scanner leitura = new Scanner(System.in);
-    private ConsumoApi consumo = new ConsumoApi();
-    private ConverteDados conversor = new ConverteDados();
-    private final String ENDERECO = "https://www.omdbapi.com/?t=";
-    private final String API_KEY = "&apikey=6585022c";
-    private List<DadosSerie> dadosSeries = new ArrayList<>();
-    private SerieRepository repositorio;
+  private final String ENDERECO = "https://www.omdbapi.com/?t=";
+  private final String API_KEY = "&apikey=6585022c";
+  private Scanner leitura = new Scanner(System.in);
+  private ConsumoApi consumo = new ConsumoApi();
+  private ConverteDados conversor = new ConverteDados();
+  private List<SerieEntity> serySchemes = new ArrayList<>();
+  private SerieRepository repositorio;
 
-    public Principal(SerieRepository repositorio) {
-        this.repositorio = repositorio;
-    }
+  public Principal(SerieRepository repositorio) {
+      this.repositorio = repositorio;
+  }
 
 
   public void exibeMenu() {
@@ -55,13 +53,13 @@ public class Principal {
 
         switch (opcao) {
             case 1:
-                buscarSerieWeb();
+                buscarESalvarNovaSerie();
                 break;
             case 2:
                 buscarEpisodioPorSerie();
                 break;
             case 3:
-                  buscarSeriesPesquisadas();
+                  exibirSeriesOrdenadasPesquisadas();
                   break;
             case 4:
                   exercicios();
@@ -75,39 +73,47 @@ public class Principal {
       }
     }
 
-    private void buscarSerieWeb() {
-        DadosSerie dados = getDadosSerie();
-        Serie serie = new Serie(dados);
-        //dadosSeries.add(dados);
-        repositorio.save(serie);
-        System.out.println(dados);
+    private String pedirNomeDaSerie() {
+      System.out.println("Digite o nome da série para busca:");
+      return leitura.nextLine();
     }
 
-    private void buscarSeriesPesquisadas() {
+    private void buscarESalvarNovaSerie() {
+        SerieEntity serieEntity = pesquisarSerie();
+        Serie serie = new Serie(serieEntity);
+        //dadosSeries.add(dados);
+        repositorio.save(serie);
+        System.out.println(serieEntity);
+    }
+
+    private void exibirSeriesOrdenadasPesquisadas() {
 //      List<Serie> series = dadosSeries.stream()
 //              .map(Serie::new)
 //              .collect(Collectors.toList());
-      List<Serie> series = repositorio.findAll();
+//      List<Serie> series = repositorio.findAll();
+//
+//      series.stream()
+//              .sorted(Comparator.comparing(Serie::getTitulo))
+//                  .forEach(System.out::println);
 
-      series.stream()
-              .sorted(Comparator.comparing(Serie::getTitulo))
-                  .forEach(System.out::println);
+      List<Serie> series = repositorio.findAllByOrderByTituloAsc();
+      series.forEach(System.out::println);
     }
 
-    private DadosSerie getDadosSerie() {
+    private SerieEntity pesquisarSerie() {
         System.out.println("Digite o nome da série para busca");
         var nomeSerie = leitura.nextLine();
         var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
-        DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
-        return dados;
+        SerieEntity serie = conversor.obterDados(json, SerieEntity.class);
+        return serie;
     }
 
     private void buscarEpisodioPorSerie(){
-        DadosSerie dadosSerie = getDadosSerie();
+        SerieEntity serieEntity = pesquisarSerie();
         List<DadosTemporada> temporadas = new ArrayList<>();
 
-        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++) {
-            var json = consumo.obterDados(ENDERECO + dadosSerie.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
+        for (int i = 1; i <= serieEntity.totalTemporadas(); i++) {
+            var json = consumo.obterDados(ENDERECO + serieEntity.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
             DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
             temporadas.add(dadosTemporada);
         }

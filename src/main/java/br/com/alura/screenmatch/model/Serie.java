@@ -1,7 +1,6 @@
 package br.com.alura.screenmatch.model;
 
 import br.com.alura.screenmatch.service.traducao.ConsultaMyMemory;
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,7 +35,7 @@ public class Serie {
   public Serie() {
   }
 
-  public Serie(DadosSerie dados) {
+  public Serie(SerieEntity dados) {
     this.titulo = dados.titulo();
     this.totalTemporadas = dados.totalTemporadas();
     this.avaliacao = OptionalDouble.of(Double.valueOf(dados.avaliacao())).orElse(0.0);
