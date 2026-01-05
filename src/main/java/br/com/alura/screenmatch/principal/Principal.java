@@ -16,6 +16,7 @@ import br.com.alura.screenmatch.service.ConverteDados;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
@@ -27,6 +28,7 @@ public class Principal {
   private ConverteDados conversor = new ConverteDados();
   private List<SerieEntity> serySchemes = new ArrayList<>();
   private SerieRepository repositorio;
+  private List<Serie> series = new ArrayList<>();
 
   public Principal(SerieRepository repositorio) {
       this.repositorio = repositorio;
@@ -96,7 +98,7 @@ public class Principal {
 //              .sorted(Comparator.comparing(Serie::getTitulo))
 //                  .forEach(System.out::println);
 
-      List<Serie> series = repositorio.findAllByOrderByTituloAsc();
+      series = repositorio.findAllByOrderByTituloAsc();
       series.forEach(System.out::println);
     }
 
@@ -109,15 +111,30 @@ public class Principal {
     }
 
     private void buscarEpisodioPorSerie(){
-        SerieEntity serieEntity = pesquisarSerie();
+        //SerieEntity serieEntity = pesquisarSerie();
+        exibirSeriesOrdenadasPesquisadas();
+        var nomeDaSerie = pedirNomeDaSerie();
+
+      Optional<Serie> first = series.stream()
+          .filter(serie -> serie.getTitulo().toLowerCase().contains(nomeDaSerie.toLowerCase()))
+          .findFirst();
+
+      if(first.isPresent()){
+        var serieEncontrada = first.get();
         List<DadosTemporada> temporadas = new ArrayList<>();
 
-        for (int i = 1; i <= serieEntity.totalTemporadas(); i++) {
-            var json = consumo.obterDados(ENDERECO + serieEntity.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
-            DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
-            temporadas.add(dadosTemporada);
+        for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
+          var json = consumo.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+          DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+          temporadas.add(dadosTemporada);
         }
         temporadas.forEach(System.out::println);
+      } else {
+          System.out.println("Série não encontrada na lista de pesquisadas.");
+      }
+
+
+
     }
 
     private void exercicios() {

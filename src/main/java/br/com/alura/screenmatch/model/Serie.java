@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class Serie {
   private String atoresStr;
   private String poster;
   private String sinopse;
-  @Transient // Ignorar essa propriedade no banco de dados
+  @OneToMany(mappedBy = "serie")
   private List<Episodio> episodios = new ArrayList<>();
 
   public Serie() {
