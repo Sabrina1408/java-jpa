@@ -5,6 +5,7 @@ import static br.com.alura.screenmatch.exercicios.Exercicios.converterEmails;
 
 
 import br.com.alura.screenmatch.exercicios.Exercicios;
+import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.SerieEntity;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Mes;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
 
@@ -129,6 +131,13 @@ public class Principal {
           temporadas.add(dadosTemporada);
         }
         temporadas.forEach(System.out::println);
+        List<Episodio> episodios = temporadas.stream()
+            .flatMap(temporada -> temporada.episodios().stream()
+                .map(episodio -> new Episodio(temporada.numero(), episodio)))
+            .collect(Collectors.toList());
+
+        serieEncontrada.setEpisodios(episodios);
+        repositorio.save(serieEncontrada);
       } else {
           System.out.println("Série não encontrada na lista de pesquisadas.");
       }

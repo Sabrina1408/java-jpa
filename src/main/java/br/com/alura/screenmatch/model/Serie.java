@@ -1,10 +1,12 @@
 package br.com.alura.screenmatch.model;
 
 import br.com.alura.screenmatch.service.traducao.ConsultaMyMemory;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,7 +32,7 @@ public class Serie {
   private String atoresStr;
   private String poster;
   private String sinopse;
-  @OneToMany(mappedBy = "serie")
+  @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<Episodio> episodios = new ArrayList<>();
 
   public Serie() {
@@ -115,6 +117,7 @@ public class Serie {
   }
 
   public void setEpisodios(List<Episodio> episodios) {
+    episodios.forEach(episodio -> episodio.setSerie(this));
     this.episodios = episodios;
   }
 
@@ -128,6 +131,7 @@ public class Serie {
         ", atoresStr='" + atoresStr + '\'' +
         ", poster='" + poster + '\'' +
         ", sinopse='" + sinopse + '\'' +
+        ", episodios='" + episodios + '\'' +
         '}';
   }
 }
