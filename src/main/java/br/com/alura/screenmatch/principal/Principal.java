@@ -5,6 +5,7 @@ import static br.com.alura.screenmatch.exercicios.Exercicios.converterEmails;
 
 
 import br.com.alura.screenmatch.exercicios.Exercicios;
+import br.com.alura.screenmatch.model.Categoria;
 import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.SerieEntity;
 import br.com.alura.screenmatch.model.DadosTemporada;
@@ -47,6 +48,7 @@ public class Principal {
                 2 - Buscar episódios
                 3 - Listar séries buscadas
                 4 - Exercícios
+                5 - Buscar series por nomes
                 0 - Sair                                 
                 """;
 
@@ -63,12 +65,23 @@ public class Principal {
                 buscarEpisodioPorSerie();
                 break;
             case 3:
-                  exibirSeriesOrdenadasPesquisadas();
-                  break;
+                exibirSeriesOrdenadasPesquisadas();
+                break;
             case 4:
-                  exercicios();
-                  break;
-            case 0:
+                exercicios();
+                break;
+            case 5:
+                buscarSeriePorTitulo();
+                break;
+
+            case 6:
+                buscarSeriePorAtor();
+                break;
+            case 7:
+                buscarSeriePorCategoria();
+                break;
+
+          case 0:
                 System.out.println("Saindo...");
                 break;
             default:
@@ -77,7 +90,39 @@ public class Principal {
       }
     }
 
-    private String pedirNomeDaSerie() {
+  private void buscarSeriePorCategoria() {
+    System.out.println("Digite o nome da categoria para busca:");
+    var nomeCAtegoria = leitura.nextLine();
+    var categoria = Categoria.fromString(nomeCAtegoria);
+    List<Serie> seriesEncontradas = repositorio.findByGeneroContainningIgnoreCase(categoria);
+  }
+
+  private void buscarSeriePorAtor() {
+    System.out.println("Digite o nome do ator para busca:");
+    var nomeAtor = leitura.nextLine();
+    List<Serie> seriesEncontradas = repositorio.findByAtoresStrContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor);
+
+    System.out.printf("Séries encontradas com o ator %s:%n", nomeAtor);
+    if (seriesEncontradas.isEmpty()) {
+      System.out.println("Nenhuma série encontrada com esse ator.");
+    } else {
+      seriesEncontradas.forEach(System.out::println);
+    }
+  }
+
+  private void buscarSeriePorTitulo() {
+    System.out.println("Digite o nome da série para busca:");
+    var nomeSerie = leitura.nextLine();
+    Optional<Serie> serieOptional = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+
+    if(serieOptional.isPresent()) {
+      System.out.printf("Dados da serie: " + serieOptional.get());
+    } else {
+      System.out.println("Série não encontrada na lista de pesquisadas.");
+    }
+  }
+
+  private String pedirNomeDaSerie() {
       System.out.println("Digite o nome da série para busca:");
       return leitura.nextLine();
     }
